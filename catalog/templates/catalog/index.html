@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -12,6 +13,7 @@
     <nav class="ms-5">
         <a class="p-2 btn btn-outline-primary" href="/album/">Каталог</a>
         <a class="p-2 btn btn-outline-primary" href="/contacts/">Контакты</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blog_list' %}">Наш Блог</a>
     </nav>
 </div>
 
