@@ -1,0 +1,53 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">{{ is_edit|yesno:"Редактировать продукт,Добавить новый продукт" }}</h1>
+    <form method="post" enctype="multipart/form-data" class="card p-4 shadow">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+            <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}"
+                   value="{{ form.name.value }}" class="form-control"
+                   {% if form.name.errors %} aria-describedby="nameHelp" {% endif %}>
+            {% if form.name.errors %}
+                <div id="nameHelp" class="text-danger">{{ form.name.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+            <textarea name="{{ form.description.name }}" id="{{ form.description.id_for_label }}"
+                      class="form-control" rows="4"
+                      {% if form.description.errors %} aria-describedby="descriptionHelp" {% endif %}>{{ form.description.value }}</textarea>
+            {% if form.description.errors %}
+                <div id="descriptionHelp" class="text-danger">{{ form.description.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.price.id_for_label }}" class="form-label">{{ form.price.label }}</label>
+            <input type="number" name="{{ form.price.name }}" id="{{ form.price.id_for_label }}"
+                   value="{{ form.price.value }}" class="form-control"
+                   {% if form.price.errors %} aria-describedby="priceHelp" {% endif %}>
+            {% if form.price.errors %}
+                <div id="priceHelp" class="text-danger">{{ form.price.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.image.id_for_label }}" class="form-label">{{ form.image.label }}</label>
+            <input type="file" name="{{ form.image.name }}" id="{{ form.image.id_for_label }}"
+                   class="form-control"
+                   {% if form.image.errors %} aria-describedby="imageHelp" {% endif %}>
+            {% if form.image.errors %}
+                <div id="imageHelp" class="text-danger">{{ form.image.errors }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-success">{{ is_edit|yesno:"Сохранить изменения,Добавить продукт" }}</button>
+    </form>
+</div>
+{% endblock %}
+

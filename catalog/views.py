@@ -1,8 +1,9 @@
+from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import ListView, TemplateView
-from django.shortcuts import render
-from django.http import HttpResponse
-from catalog.models import Category, Product
+from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView, DetailView
+from django.shortcuts import render, get_object_or_404, redirect
+from catalog.forms import ProductForm, VersionForm
+from catalog.models import Category, Product, Version
 
 
 # Главная страница с выводом всех продуктов
@@ -44,3 +45,73 @@ class ProdsView(View):
             'title': f'Наши товары - все товары {category_item.name}'
         }
         return render(request, self.template_name, context)
+
+
+class ProductListView(ListView):
+    model = Product
+    template_name = 'catalog/product_list.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        return Product.objects.prefetch_related('versions')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        for product in context['products']:
+            product.current_version = product.versions.filter(is_current=True).first()
+        return context
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'catalog/product_detail.html'
+    context_object_name = 'product_detail'
+
+
+# Создание продукта
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'catalog/product_form.html'
+    success_url = reverse_lazy('catalog:product_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_edit'] = False
+        return context
+
+
+# Редактирование продукта
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'catalog/product_form.html'
+    success_url = reverse_lazy('product_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_edit'] = True
+        return context
+
+
+# Удаление продукта
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = 'catalog/product_confirm_delete.html'
+    success_url = '/products/'
+
+
+class VersionUpdateView(UpdateView):
+    model = Version
+    form_class = VersionForm
+    template_name = 'version_form.html'
+
+    def get_object(self, queryset=None):
+        product_id = self.kwargs.get('product_id')
+        version_id = self.kwargs.get('pk')
+        return get_object_or_404(Version, pk=version_id, product__id=product_id)
+
+    def form_valid(self, form):
+        version = form.save(commit=False)
+        version.save()
+        return redirect(reverse('catalog:product_detail', args=[version.product.id]))

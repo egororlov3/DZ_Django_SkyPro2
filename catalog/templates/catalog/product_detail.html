@@ -1,0 +1,35 @@
+<!-- catalog/templates/catalog/product_detail.html -->
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            {% if object.image %}
+                <img src="{{ object.image.url }}" alt="{{ object.name }}" class="img-fluid">
+            {% else %}
+                <p>Изображение отсутствует.</p>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h1 class="mb-3">{{ object.name }}</h1>
+            <p class="lead">{{ object.description }}</p>
+            <p class="h4">Цена: <strong>{{ object.price }} руб.</strong></p>
+            <p>Категория: <strong>{{ object.category.name }}</strong></p>
+            <p>
+                {% if object.current_version %}
+                    <strong>Текущee состояние:</strong> {{ object.current_version.version_name }}
+                    (версия {{ object.current_version.version_number }})
+                    <a href="{% url 'catalog:version_edit' object.pk object.current_version.pk %}" class="btn btn-warning">Редактировать версию</a>
+                {% else %}
+                    <strong>Текущee состояние:</strong> Нет текущего состояния для этого продукта.
+                {% endif %}
+            </p>
+            <div class="d-flex">
+                <a href="{% url 'catalog:product_update' object.pk %}" class="btn btn-primary me-2">Редактировать</a>
+                <a href="{% url 'catalog:product_delete' object.pk %}" class="btn btn-danger">Удалить</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
