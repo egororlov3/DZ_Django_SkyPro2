@@ -1,65 +1,157 @@
 [
   {
     "model": "catalog.category",
+    "pk": 16,
+    "fields": {
+      "name": "IPhone",
+      "description": "Легендарная линейка смартфонов от Apple"
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 17,
+    "fields": {
+      "name": "Техника Apple",
+      "description": "Macbook, IPad, AirPods и тд"
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 18,
+    "fields": {
+      "name": "Умный дом 'Яндекс'",
+      "description": "Колонки, ТВ, лампочки и тд"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 9,
+    "fields": {
+      "name": "IPhone 13 Pro Max 128гб",
+      "description": "Новый, запечатанный",
+      "image": "catalog/13promax_d0AwkUr.jpg",
+      "category": 16,
+      "price": 95990,
+      "created_at": "2024-09-28",
+      "updated_at": "2024-09-28"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 10,
+    "fields": {
+      "name": "IPhone 14 Pro Max 128гб",
+      "description": "Новый, запечатанный",
+      "image": "catalog/14promax_jtkR90C.png",
+      "category": 16,
+      "price": 105990,
+      "created_at": "2024-09-28",
+      "updated_at": "2024-09-28"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 11,
+    "fields": {
+      "name": "MacBook Air 13 M3 8/256",
+      "description": "Новый, запечатанный",
+      "image": "catalog/macbook_13_7QHL8MU.jpeg",
+      "category": 17,
+      "price": 109990,
+      "created_at": "2024-09-28",
+      "updated_at": "2024-09-28"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 12,
+    "fields": {
+      "name": "AirPods 3",
+      "description": "Новый, запечатанный",
+      "image": "catalog/airpods3_gJ0Jchj.jpg",
+      "category": 17,
+      "price": 16490,
+      "created_at": "2024-09-28",
+      "updated_at": "2024-09-28"
+    }
+  },
+  {
+    "model": "catalog.product",
     "pk": 13,
     "fields": {
-      "name": "Категория 1",
-      "description": "Описание категории 1"
+      "name": "Яндекс Станция Дуо Макс",
+      "description": "Новый, запечатанный",
+      "image": "catalog/яндекс_дуо_макс.jpg",
+      "category": 18,
+      "price": 32990,
+      "created_at": "2024-09-28",
+      "updated_at": "2024-09-28"
     }
   },
   {
-    "model": "catalog.category",
+    "model": "catalog.product",
     "pk": 14,
     "fields": {
-      "name": "Категория 2",
-      "description": "Описание категории 2"
-    }
-  },
-  {
-    "model": "catalog.category",
-    "pk": 15,
-    "fields": {
-      "name": "Категория 3",
-      "description": "Описание категории 3"
-    }
-  },
-  {
-    "model": "catalog.product",
-    "pk": 6,
-    "fields": {
-      "name": "Продукт 1",
-      "description": "Описание Продукта 1",
-      "image": "",
-      "category": 13,
-      "price": 10,
-      "created_at": "2024-09-25",
-      "updated_at": "2024-09-25"
+      "name": "Яндекс Станция Лайт 2",
+      "description": "Новый, запечатанный",
+      "image": "catalog/яндекс_лайт2.webp",
+      "category": 18,
+      "price": 7990,
+      "created_at": "2024-09-28",
+      "updated_at": "2024-09-28"
     }
   },
   {
     "model": "catalog.product",
-    "pk": 7,
+    "pk": 16,
     "fields": {
-      "name": "Продукт 2",
-      "description": "Описание Продукта 2",
+      "name": "16 256гб",
+      "description": "розовый",
       "image": "",
-      "category": 14,
-      "price": 15,
-      "created_at": "2024-09-25",
-      "updated_at": "2024-09-25"
+      "category": 16,
+      "price": 117000,
+      "created_at": "2024-09-30",
+      "updated_at": "2024-09-30"
     }
   },
   {
-    "model": "catalog.product",
-    "pk": 8,
+    "model": "catalog.version",
+    "pk": 1,
     "fields": {
-      "name": "Продукт 3",
-      "description": "Описание Продукта 3",
-      "image": "",
-      "category": 15,
-      "price": 50,
-      "created_at": "2024-09-25",
-      "updated_at": "2024-09-25"
+      "product": 11,
+      "version_number": "1",
+      "version_name": "есть в наличие",
+      "is_current": true
+    }
+  },
+  {
+    "model": "catalog.version",
+    "pk": 2,
+    "fields": {
+      "product": 16,
+      "version_number": "2",
+      "version_name": "предзаказ",
+      "is_current": true
+    }
+  },
+  {
+    "model": "catalog.version",
+    "pk": 3,
+    "fields": {
+      "product": 9,
+      "version_number": "0",
+      "version_name": "отсутствует",
+      "is_current": true
+    }
+  },
+  {
+    "model": "catalog.version",
+    "pk": 4,
+    "fields": {
+      "product": 13,
+      "version_number": "1",
+      "version_name": "есть в наличие",
+      "is_current": true
     }
   }
 ]

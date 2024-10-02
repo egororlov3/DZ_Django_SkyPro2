@@ -3,6 +3,7 @@ from django.views import View
 from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView, DetailView
 from django.shortcuts import render, get_object_or_404, redirect
 from catalog.forms import ProductForm, VersionForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from catalog.models import Category, Product, Version
 
 
@@ -69,7 +70,7 @@ class ProductDetailView(DetailView):
 
 
 # Создание продукта
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'catalog/product_form.html'
@@ -82,7 +83,7 @@ class ProductCreateView(CreateView):
 
 
 # Редактирование продукта
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'catalog/product_form.html'
@@ -95,13 +96,13 @@ class ProductUpdateView(UpdateView):
 
 
 # Удаление продукта
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     template_name = 'catalog/product_confirm_delete.html'
     success_url = '/products/'
 
 
-class VersionUpdateView(UpdateView):
+class VersionUpdateView(LoginRequiredMixin, UpdateView):
     model = Version
     form_class = VersionForm
     template_name = 'version_form.html'

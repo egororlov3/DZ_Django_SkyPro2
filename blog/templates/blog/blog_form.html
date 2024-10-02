@@ -1,28 +1,19 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>{% if post %}Редактирование: {{ post.title }}{% else %}Создание нового поста{% endif %}</title>
-</head>
-<body>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">{% if post %}Редактирование: {{ post.title }}{% else %}Создание нового поста{% endif %}</h1>
+{% extends 'catalog/base.html' %}
 
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
+{% block title %}
+    {% if post %}Редактирование: {{ post.title }}{% else %}Создание нового поста{% endif %}
+{% endblock %}
 
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">{% if post %}Сохранить изменения{% else %}Создать пост{% endif %}</button>
-                <a class="btn btn-outline-secondary" href="{% url 'blog:blog_list' %}">Вернуться к списку постов</a>
-            </div>
-        </form>
-    </div>
+{% block content %}
+    <h1 class="text-center mb-4">{% if post %}Редактирование: {{ post.title }}{% else %}Создание нового поста{% endif %}</h1>
 
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-</body>
-</html>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">{% if post %}Сохранить изменения{% else %}Создать пост{% endif %}</button>
+            <a class="btn btn-outline-secondary" href="{% url 'blog:blog_list' %}">Вернуться к списку постов</a>
+        </div>
+    </form>
+{% endblock %}

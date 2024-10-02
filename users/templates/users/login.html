@@ -1,0 +1,17 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}
+    Вход в систему
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Вход в систему</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+                <button type="submit" class="btn btn-success" >Войти</button>
+                <a class="btn btn-outline-secondary" href="{% url 'catalog:index' %}">Вернуться на главную</a>
+     </div>
+{% endblock %}
