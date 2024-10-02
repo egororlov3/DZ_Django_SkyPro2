@@ -57,7 +57,7 @@ class RegisterView(CreateView):
 class ProfileView(UpdateView):
     model = User
     form_class = UserProfileForm
-    template_name = 'users/profile.html'
+    template_name = 'users/user_form.html'
     success_url = reverse_lazy('users:profile')
 
     def get_object(self, queryset=None):
