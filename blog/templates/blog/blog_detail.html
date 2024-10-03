@@ -24,8 +24,12 @@
     </div>
 
     <div class="text-center mb-4">
+        {% if perms.blog.change_post %}
         <a class="btn btn-warning" href="{% url 'blog:blog_update' post.slug %}">Редактировать пост</a>
+        {% endif %}
+        {% if perms.blog.delete_post %}
         <a class="btn btn-danger" href="{% url 'blog:blog_delete' post.slug %}">Удалить пост</a>
+        {% endif %}
     </div>
 
     <p class="text-center text-muted mt-4">Количество просмотров: {{ post.views }}</p>

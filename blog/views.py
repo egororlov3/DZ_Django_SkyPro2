@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -7,15 +8,20 @@ from .forms import BlogPostForm
 
 
 # Список постов
-class BlogPostListView(ListView):
+class BlogPostListView(LoginRequiredMixin, ListView):
     model = BlogPost
     template_name = 'blog/blog_list.html'
     context_object_name = 'posts'
     queryset = BlogPost.objects.filter(is_published=True).order_by('-created_at')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['perms'] = self.request.user.get_all_permissions()
+        return context
+
 
 # Детали поста
-class BlogPostDetailView(DetailView):
+class BlogPostDetailView(LoginRequiredMixin, DetailView):
     model = BlogPost
     template_name = 'blog/blog_detail.html'
     context_object_name = 'post'
@@ -40,9 +46,10 @@ class BlogPostDetailView(DetailView):
 
 
 # Создание поста
-class BlogPostCreateView(CreateView):
+class BlogPostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = BlogPost
     form_class = BlogPostForm
+    permission_required = 'blog.add_post'
     template_name = 'blog/blog_form.html'
 
     def form_valid(self, form):
@@ -53,9 +60,10 @@ class BlogPostCreateView(CreateView):
 
 
 # Обновление поста
-class BlogPostUpdateView(UpdateView):
+class BlogPostUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = BlogPost
     form_class = BlogPostForm
+    permission_required = 'blog.change_post'
     template_name = 'blog/blog_form.html'
 
     def get_success_url(self):
@@ -68,10 +76,11 @@ class BlogPostUpdateView(UpdateView):
 
 
 # Удаление поста
-class BlogPostDeleteView(DeleteView):
+class BlogPostDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = BlogPost
     template_name = 'blog/blog_confirm_delete.html'
     success_url = reverse_lazy('blog:blog_list')
+    permission_required = 'blog.delete_post'
 
     def get_object(self, queryset=None):
         slug = self.kwargs.get('slug')

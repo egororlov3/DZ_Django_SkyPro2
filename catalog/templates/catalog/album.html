@@ -3,12 +3,25 @@
 {% block content %}
      <div class="container">
          <div class="text-center mb-4">
-           <a href="{% url 'catalog:product_create' %}" class="btn btn-primary">Добавить товар</a>
+             {% if perms.catalog.add_category %}
+               <a href="{% url 'catalog:category_create' %}" class="btn btn-primary">Добавить категорию</a>
+             {% endif %}
          </div>
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        {% for object in object_list %}
-            {% include 'catalog/includes/inc_catalog.html' with object=object %}
-          {% endfor %}
-      </div>
+
+         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for object in object_list %}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5>{{ object.name }}</h5>
+                            <a href="{% url 'catalog:prods' object.pk %}" class="btn btn-outline-secondary">К товарам</a>
+                            {% if perms.catalog.change_category %}
+                                <a href="{% url 'catalog:category_update' object.pk %}" class="btn btn-secondary">Редактировать категорию</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+         </div>
      </div>
 {% endblock %}

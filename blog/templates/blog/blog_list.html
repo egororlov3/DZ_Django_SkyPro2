@@ -6,7 +6,9 @@
 <div class="container mt-5">
     <h1 class="mb-4">Список постов</h1>
     <div class="text-center mb-4">
-        <a href="{% url 'blog:blog_create' %}" class="btn btn-primary">Добавить пост</a>
+        {% if 'blog.add_post' in perms %}
+            <a href="{% url 'blog:blog_create' %}" class="btn btn-primary">Добавить пост</a>
+        {% endif %}
     </div>
 
     {% if posts %}

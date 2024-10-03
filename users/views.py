@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 from django.shortcuts import render, redirect
@@ -54,7 +55,7 @@ class RegisterView(CreateView):
         return super().form_valid(form)  # Завершение обработки и перенаправление на success_url
 
 
-class ProfileView(UpdateView):
+class ProfileView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserProfileForm
     template_name = 'users/user_form.html'

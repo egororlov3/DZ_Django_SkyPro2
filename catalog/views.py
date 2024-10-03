@@ -2,12 +2,12 @@ from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView, DetailView
 from django.shortcuts import render, get_object_or_404, redirect
-from catalog.forms import ProductForm, VersionForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from catalog.forms import ProductForm, VersionForm, CategoryForm
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from catalog.models import Category, Product, Version
 
 
-# Главная страница с выводом всех продуктов
+# Главная страница с выводом популярных продуктов
 class IndexView(ListView):
     model = Product
     template_name = 'catalog/index.html'
@@ -17,13 +17,13 @@ class IndexView(ListView):
         return render(request, 'catalog/contacts.html')
 
 
-# Статическая страница "Контакты"
+# Страница "Контакты"
 class ContactsView(TemplateView):
     template_name = 'catalog/contacts.html'
 
 
 # Статическая страница "Base"
-class BaseView(TemplateView):
+class BaseView(LoginRequiredMixin, TemplateView):
     template_name = 'catalog/base.html'
 
 
@@ -36,7 +36,7 @@ class AlbumView(ListView):
 
 
 # Страница с товарами определенной категории
-class ProdsView(View):
+class ProdsView(LoginRequiredMixin, View):
     template_name = 'catalog/prods.html'
 
     def get(self, request, pk, *args, **kwargs):
@@ -48,6 +48,30 @@ class ProdsView(View):
         return render(request, self.template_name, context)
 
 
+# Редактирование категории
+class CategoryUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = Category
+    form_class = CategoryForm
+    permission_required = 'catalog.change_category'
+    template_name = 'catalog/category_form.html'
+    success_url = reverse_lazy('catalog:album')
+
+
+# Создание категории
+class CategoryCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = Category
+    form_class = CategoryForm
+    permission_required = 'catalog.add_category'
+    template_name = 'catalog/category_form.html'
+    success_url = reverse_lazy('catalog:album')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_edit'] = False
+        return context
+
+
+# Просмотр всех товаров
 class ProductListView(ListView):
     model = Product
     template_name = 'catalog/product_list.html'
@@ -63,16 +87,18 @@ class ProductListView(ListView):
         return context
 
 
-class ProductDetailView(DetailView):
+# Просмотр определенного товара
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
     context_object_name = 'product_detail'
 
 
-# Создание продукта
-class ProductCreateView(LoginRequiredMixin, CreateView):
+# Создание товара
+class ProductCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
+    permission_required = 'catalog.add_product'
     template_name = 'catalog/product_form.html'
     success_url = reverse_lazy('catalog:product_list')
 
@@ -82,10 +108,11 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-# Редактирование продукта
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+# Редактирование товара
+class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
+    permission_required = 'catalog.change_product'
     template_name = 'catalog/product_form.html'
     success_url = reverse_lazy('product_list')
 
@@ -95,16 +122,19 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
 
-# Удаление продукта
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+# Удаление товара
+class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Product
     template_name = 'catalog/product_confirm_delete.html'
     success_url = '/products/'
+    permission_required = 'catalog.delete_product'
 
 
-class VersionUpdateView(LoginRequiredMixin, UpdateView):
+# Редактирование вресии товара
+class VersionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Version
     form_class = VersionForm
+    permission_required = 'catalog.change_version'
     template_name = 'version_form.html'
 
     def get_object(self, queryset=None):

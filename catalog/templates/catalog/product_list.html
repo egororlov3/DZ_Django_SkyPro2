@@ -4,7 +4,9 @@
 <div class="container">
     <h1 class="text-center">Список товаров</h1>
     <div class="text-center mb-4">
+        {% if perms.catalog.add_product %}
         <a href="{% url 'catalog:product_create' %}" class="btn btn-primary">Добавить товар</a>
+        {% endif %}
     </div>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         {% for product in products %}

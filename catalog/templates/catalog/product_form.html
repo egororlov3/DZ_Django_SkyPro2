@@ -46,8 +46,15 @@
             {% endif %}
         </div>
 
+        <div class="mb-3">
+            <label for="is_active" class="form-label">Признак активности</label>
+            <select name="is_active" id="is_active" class="form-control">
+                <option value="True" {% if form.is_active.value == 'True' %}selected{% endif %}>Активный</option>
+                <option value="False" {% if form.is_active.value == 'False' %}selected{% endif %}>Неактивный</option>
+            </select>
+        </div>
+
         <button type="submit" class="btn btn-success">{{ is_edit|yesno:"Сохранить изменения,Добавить продукт" }}</button>
     </form>
 </div>
 {% endblock %}
-

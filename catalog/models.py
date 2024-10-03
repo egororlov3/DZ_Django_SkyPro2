@@ -21,6 +21,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='blog/', **NULLABLE, verbose_name='фото')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='категория')
     price = models.IntegerField(verbose_name='цена за штуку')
+    is_active = models.BooleanField(default=True, verbose_name='статус')
     created_at = models.DateField(auto_now_add=True, verbose_name='дата создания')
     updated_at = models.DateField(auto_now=True, verbose_name='дата последнего изменения')
 

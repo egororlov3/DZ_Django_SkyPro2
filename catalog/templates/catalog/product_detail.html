@@ -20,14 +20,20 @@
                 {% if object.current_version %}
                     <strong>Текущee состояние:</strong> {{ object.current_version.version_name }}
                     (версия {{ object.current_version.version_number }})
+                {% if perms.catalog.change_version %}
                     <a href="{% url 'catalog:version_edit' object.pk object.current_version.pk %}" class="btn btn-warning">Редактировать версию</a>
+                {% endif %}
                 {% else %}
                     <strong>Текущee состояние:</strong> Нет текущего состояния для этого продукта.
                 {% endif %}
             </p>
             <div class="d-flex">
+                {% if perms.catalog.change_product %}
                 <a href="{% url 'catalog:product_update' object.pk %}" class="btn btn-primary me-2">Редактировать</a>
+                {% endif %}
+                {% if perms.catalog.delete_product %}
                 <a href="{% url 'catalog:product_delete' object.pk %}" class="btn btn-danger">Удалить</a>
+                {% endif %}
             </div>
         </div>
     </div>
