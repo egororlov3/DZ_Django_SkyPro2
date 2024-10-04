@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.core.cache import cache
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView, DetailView
@@ -5,6 +7,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from catalog.forms import ProductForm, VersionForm, CategoryForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from catalog.models import Category, Product, Version
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+
+from catalog.services import get_cached_categories
 
 
 # Главная страница с выводом популярных продуктов
@@ -36,15 +42,19 @@ class AlbumView(ListView):
 
 
 # Страница с товарами определенной категории
-class ProdsView(LoginRequiredMixin, View):
+class ProdsView(LoginRequiredMixin, DetailView):
     template_name = 'catalog/prods.html'
 
     def get(self, request, pk, *args, **kwargs):
-        category_item = Category.objects.get(pk=pk)
+        category_item = get_object_or_404(Category, pk=pk)
+        categories = get_cached_categories()
+
         context = {
             'object_list': Product.objects.filter(category_id=pk),
-            'title': f'Наши товары - все товары {category_item.name}'
+            'title': f'Наши товары - все товары {category_item.name}',
+            'categories': categories
         }
+
         return render(request, self.template_name, context)
 
 
@@ -88,10 +98,25 @@ class ProductListView(ListView):
 
 
 # Просмотр определенного товара
+@method_decorator(cache_page(60), name='dispatch')
 class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
     context_object_name = 'product_detail'
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        if settings.CACHE_ENABLED:
+            key = f'product_detail_{self.object.pk}'
+            product_versions = cache.get(key)
+            if product_versions is None:
+                product_versions = self.object.versions.all()
+                cache.set(key, product_versions)
+        else:
+            product_versions = self.object.versions.all()
+
+        context_data['products'] = product_versions
+        return context_data
 
 
 # Создание товара

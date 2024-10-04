@@ -33,7 +33,6 @@ class Product(models.Model):
         verbose_name_plural = 'продукты'
 
     def current_version(self):
-        # Возвращает первую версию, которая помечена как текущая
         return self.versions.filter(is_current=True).first()
 
 
@@ -45,6 +44,3 @@ class Version(models.Model):
 
     def __str__(self):
         return f'{self.version_name} (v{self.version_number})'
-
-
-
